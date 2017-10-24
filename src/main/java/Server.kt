@@ -25,8 +25,9 @@ class EchoHandler : HttpHandler {
 
 fun main(args: Array<String>) {
     val server = HttpServer.create()
-    server.bind(InetSocketAddress(7777), 0)
+    server.bind(InetSocketAddress(80), 0)
     server.createContext("/", EchoHandler())
     server.executor = null
     server.start()
 }
+ 
