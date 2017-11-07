@@ -9,12 +9,14 @@ fun main(args: Array<String>) {
     val parser = JsonParser()
     val builder = GsonBuilder().setPrettyPrinting().create()
     val server = HttpServer.create()
-    val port = System.getProperty("PORT", "8000").toInt()
+    val port = System.getenv("PORT")?.toInt() ?: 8000
+    println("Available on port $port")
     server.bind(InetSocketAddress(port), 0)
     server.createContext("/") { exchange ->
         val requestId = maxRequestId.getAndIncrement()
         val responseObject = try {
             val string = exchange.requestBody.bufferedReader().readText()
+            println("Request file: $string")
             parser.parse(string)
         } catch (ex: Exception) {
             val parts = ex.message!!.split(":").last().split(" at ")
