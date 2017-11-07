@@ -1,32 +1,43 @@
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
-import com.sun.net.httpserver.HttpExchange
-import com.sun.net.httpserver.HttpHandler
+import com.google.gson.*
 import com.sun.net.httpserver.HttpServer
 import java.net.InetSocketAddress
+import java.util.concurrent.atomic.AtomicInteger
 
-class EchoHandler : HttpHandler {
-    override fun handle(exchange: HttpExchange) {
-        val response = try {
-            val parser = JsonParser()
-            val builder = GsonBuilder().setPrettyPrinting().create()
+
+fun main(args: Array<String>) {
+    val maxRequestId = AtomicInteger(0)
+    val parser = JsonParser()
+    val builder = GsonBuilder().setPrettyPrinting().create()
+    val server = HttpServer.create()
+    val port = System.getProperty("PORT", "8000").toInt()
+    server.bind(InetSocketAddress(port), 0)
+    server.createContext("/") { exchange ->
+        val requestId = maxRequestId.getAndIncrement()
+        val responseObject = try {
             val string = exchange.requestBody.bufferedReader().readText()
-            val element = parser.parse(string)
-            builder.toJson(element) + "\n"
+            parser.parse(string)
         } catch (ex: Exception) {
-            ex.message + "\n"
+            val parts = ex.message!!.split(":").last().split(" at ")
+            val message = parts.first().trim()
+            val place = parts.drop(1).joinToString("").trim()
+            val responseObject = JsonObject()
+            val errorMessage = JsonArray()
+            errorMessage.add(JsonPrimitive(message))
+            val errorPlace = JsonArray()
+            errorPlace.add(JsonPrimitive(place))
+            val errorCode = JsonPrimitive(errorMessage.hashCode())
+            val errorId = JsonPrimitive(requestId)
+            responseObject.add("errorCode", errorCode)
+            responseObject.add("errorMessage", errorMessage)
+            responseObject.add("errorPlace", errorPlace)
+            responseObject.add("request-id", errorId)
+            responseObject
         }
+        val response = builder.toJson(responseObject) + "\n"
         exchange.sendResponseHeaders(200, response.length.toLong())
         exchange.responseBody.write(response.toByteArray())
         exchange.responseBody.close()
     }
-}
-
-
-fun main(args: Array<String>) {
-    val server = HttpServer.create()
-    server.bind(InetSocketAddress(80), 0)
-    server.createContext("/", EchoHandler())
     server.executor = null
     server.start()
 }
