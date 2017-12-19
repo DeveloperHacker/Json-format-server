@@ -16,7 +16,6 @@ fun main(args: Array<String>) {
         val requestId = maxRequestId.getAndIncrement()
         val responseObject = try {
             val string = exchange.requestBody.bufferedReader().readText()
-            println("Request file: $string")
             parser.parse(string)
         } catch (ex: Exception) {
             val parts = ex.message!!.split(":").last().split(" at ")
@@ -28,11 +27,15 @@ fun main(args: Array<String>) {
             val errorPlace = JsonArray()
             errorPlace.add(JsonPrimitive(place))
             val errorCode = JsonPrimitive(errorMessage.hashCode())
-            val errorId = JsonPrimitive(requestId)
+            val errorId = JsonArray()
+            errorId.add(JsonPrimitive(requestId.toString()))
+            val resource = JsonArray()
+            resource.add(JsonPrimitive("json string"))
             responseObject.add("errorCode", errorCode)
             responseObject.add("errorMessage", errorMessage)
             responseObject.add("errorPlace", errorPlace)
             responseObject.add("request-id", errorId)
+            responseObject.add("resource", resource)
             responseObject
         }
         val response = builder.toJson(responseObject) + "\n"
