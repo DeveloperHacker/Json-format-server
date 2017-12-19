@@ -3,7 +3,12 @@ import com.sun.net.httpserver.HttpServer
 import java.net.InetSocketAddress
 import java.util.concurrent.atomic.AtomicInteger
 
-
+/**
+ * Server for json validation and formatting
+ *
+ * @port getting from program environment by key "PORT"
+ * If port hasn't defined then 8000 assign to port
+ */
 fun main(args: Array<String>) {
     val maxRequestId = AtomicInteger(0)
     val parser = JsonParser()
