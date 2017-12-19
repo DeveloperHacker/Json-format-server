@@ -13,7 +13,7 @@ docker run -t --rm -p 80:80 validation-service
 
 ***Usage***
 
-Create json file with name `example.json`
+Create json file with name `filename.json`
 
 ```
 {"a":[1,2,3],"b":null}
