@@ -1,17 +1,28 @@
-###Json Formatter Server
+#Json Formatter Server
 
 This is server for validation and formatting json files
 
-***Get starting***
+##Get starting
 
 For building and running image type script
+
+###based maven
 
 ```
 docker build -t validation-service github.com/DeveloperHacker/Json-format-server
 docker run -t --rm -p 80:80 validation-service
 ```
 
-***Usage***
+###based gradle
+
+```
+gradle build
+./gradlew clean
+./gradlew build_image
+docker run -t --rm -p 80:80 validation-service
+```
+
+##Usage
 
 Create json file with name `filename.json`
 
@@ -32,7 +43,7 @@ Server return formatted file
 }
 ```
 
-***Errors***
+##Errors
 
 Error format have structure like
 ```
