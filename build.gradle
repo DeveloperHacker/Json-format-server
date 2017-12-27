@@ -4,7 +4,7 @@ apply plugin: 'application'
 apply plugin: 'maven'
 apply plugin: 'docker'
 
-defaultTasks 'compile_jar'
+defaultTasks 'build_jar'
 
 mainClassName = 'ServerKt'
 
@@ -32,12 +32,11 @@ task wrapper(type: Wrapper) {
     gradleVersion = "4.1"
 }
 
-task compile_jar(type: Jar) {
-    println "HELLLOOOOOOOOOOOOOOOOOOOOOOO!!!!!!!!!!!!!!"
+task build_jar(type: Jar) {
     manifest {
         attributes 'Main-Class': mainClassName
     }
-    baseName = project.name + '-all'
+    baseName = project.name + "-all"
     from {
         configurations.compile.collect {
             it.isDirectory() ? it : zipTree(it)
@@ -46,6 +45,14 @@ task compile_jar(type: Jar) {
     with jar
 }
 
-task build() {
+task build_image(type: Docker) {
+    dependsOn "build_jar"
+    def jar_file = project.name + "-all.jar"
+    applicationName = "validation-server"
+    setEnvironment("PORT", "80")
+    exposePort(80)
+    addFile("build/libs/" + jar_file, "opt/" + jar_file)
+    defaultCommand =  ["java", "-jar", "opt/" + jar_file]
 
 }
+
