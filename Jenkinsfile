@@ -1,6 +1,6 @@
 pipeline {
 	agent {
-		docker 'test_image'
+		docker 'test_image:latest'
 	}
 	stages {
 	    stage('maven build image') {
