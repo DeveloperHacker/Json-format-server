@@ -16,7 +16,6 @@ docker run -t --rm -p 80:80 validation-service
 ### based gradle
 
 ```
-gradle build
 ./gradlew clean
 ./gradlew build_image
 docker run -t --rm -p 80:80 validation-service
