@@ -10,7 +10,6 @@ pipeline {
 	    	steps {
 		        sh './gradlew clean'
 		        sh './gradlew build_image'
-		        sh 'docker build -t validation-service github.com/DeveloperHacker/Json-format-server'
 		    }
 	    }
 	}
