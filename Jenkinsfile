@@ -1,6 +1,6 @@
 pipeline {
 	tools {
-	     gradle "gradle-2.13"
+	     gradle "gradle-xx"
 	}
     agent { docker 'test_image' }
     stages {
