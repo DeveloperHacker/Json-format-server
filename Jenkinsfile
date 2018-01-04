@@ -1,4 +1,4 @@
-pipline {
+pipeline {
 	agent {}
 	tools {
 	    gradle "gradle-2.4"
