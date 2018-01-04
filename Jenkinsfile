@@ -1,5 +1,8 @@
 pipeline {
-    agent { docker 'maven:3.3.3' }
+	tools {
+	     gradle "gradle-2.13"
+	}
+    agent { docker 'test_image' }
     stages {
         stage('maven build image') {
             steps {
