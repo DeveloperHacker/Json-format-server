@@ -1,0 +1,1 @@
+sudo rm -rf /home/jenkins/.* 2> /dev/null
