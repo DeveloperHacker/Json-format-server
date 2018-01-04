@@ -48,7 +48,7 @@ task build_jar(type: Jar) {
 task build_image(type: Docker) {
     dependsOn "build_jar"
     def jar_file = project.name + "-all.jar"
-    applicationName = "validation-server"
+    applicationName = "validation-service"
     setEnvironment("PORT", "80")
     exposePort(80)
     addFile("build/libs/" + jar_file, "opt/" + jar_file)
