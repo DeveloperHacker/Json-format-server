@@ -1,7 +1,4 @@
 pipeline {
-	tools {
-	     gradle "gradle-xx"
-	}
     agent { docker 'test_image' }
     stages {
         stage('maven build image') {
